@@ -1,57 +1,78 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-const apiBase = 'https://instinctive-studio-assign-keeh-qudvvv59j.vercel.app/api/users';
+const apiBase = "https://instinctive-studio-backend.vercel.app/api/users";
 
 // Fetch students
-export const fetchStudents = createAsyncThunk('students/fetch', async (_, thunkAPI) => {
-  try {
-    const response = await fetch(apiBase, {
-      headers: { 'Content-Type': 'application/json' },
-    });
-    if (!response.ok) {
-      throw new Error(`Failed to fetch students: ${response.status} ${response.statusText}`);
+export const fetchStudents = createAsyncThunk(
+  "students/fetch",
+  async (_, thunkAPI) => {
+    try {
+      const response = await fetch(apiBase, {
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch students: ${response.status} ${response.statusText}`
+        );
+      }
+      return await response.json();
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.message || "Unknown error occurred"
+      );
     }
-    return await response.json();
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.message || 'Unknown error occurred');
   }
-});
+);
 
 // Create a new student
-export const createStudent = createAsyncThunk('students/create', async (student, thunkAPI) => {
-  try {
-    const response = await fetch(apiBase, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(student),
-    });
-    if (!response.ok) {
-      throw new Error(`Failed to create student: ${response.status} ${response.statusText}`);
+export const createStudent = createAsyncThunk(
+  "students/create",
+  async (student, thunkAPI) => {
+    try {
+      const response = await fetch(apiBase, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(student),
+      });
+      if (!response.ok) {
+        throw new Error(
+          `Failed to create student: ${response.status} ${response.statusText}`
+        );
+      }
+      return await response.json();
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.message || "Unknown error occurred"
+      );
     }
-    return await response.json();
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.message || 'Unknown error occurred');
   }
-});
+);
 
 // Delete a student
-export const deleteStudent = createAsyncThunk('students/delete', async (id, thunkAPI) => {
-  try {
-    const response = await fetch(`${apiBase}/${id}`, {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-    });
-    if (!response.ok) {
-      throw new Error(`Failed to delete student: ${response.status} ${response.statusText}`);
+export const deleteStudent = createAsyncThunk(
+  "students/delete",
+  async (id, thunkAPI) => {
+    try {
+      const response = await fetch(`${apiBase}/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!response.ok) {
+        throw new Error(
+          `Failed to delete student: ${response.status} ${response.statusText}`
+        );
+      }
+      return id; // Return the ID of the deleted student
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.message || "Unknown error occurred"
+      );
     }
-    return id; // Return the ID of the deleted student
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.message || 'Unknown error occurred');
   }
-});
+);
 
 const studentSlice = createSlice({
-  name: 'students',
+  name: "students",
   initialState: { students: [], loading: false, error: null },
   reducers: {},
   extraReducers: (builder) => {
